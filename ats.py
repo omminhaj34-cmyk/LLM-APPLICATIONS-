@@ -2,7 +2,7 @@ from gemini import client
 
 def analyze_resume(text):
     response = client.models.generate_content(
-        model="gemini-2.5-flash-lite",
+        model="gemini-flash-latest",
         contents=f"""
 You are an ATS resume analyzer.
 
