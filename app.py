@@ -426,7 +426,7 @@ Return ONLY JSON in this format:
 }}
 No extra text, no markdown fences.
 """
-                response = client.models.generate_content(model="gemini-3.5-flash", contents=prompt)
+                response = client.models.generate_content(model="gemini-2.5-flash", contents=prompt)
                 try:
                     cleaned = response.text.strip().replace("```json", "").replace("```", "")
                     sections_data = json.loads(cleaned)
@@ -473,7 +473,7 @@ Return ONLY JSON in this format:
 }}
 No extra text, no markdown fences.
 """
-                response = client.models.generate_content(model="gemini-3.5-flash", contents=prompt)
+                response = client.models.generate_content(model="gemini-2.5-flash", contents=prompt)
                 try:
                     cleaned = response.text.strip().replace("```json", "").replace("```", "")
                     st.session_state.optimization = json.loads(cleaned)
@@ -521,7 +521,7 @@ Return ONLY JSON in this format:
 }}
 No extra text, no markdown fences.
 """
-                response = client.models.generate_content(model="gemini-3.5-flash", contents=prompt)
+                response = client.models.generate_content(model="gemini-2.5-flash", contents=prompt)
                 try:
                     cleaned = response.text.strip().replace("```json", "").replace("```", "")
                     st.session_state.job_match = json.loads(cleaned)
@@ -612,7 +612,7 @@ elif page == "⚙️ Settings":
     </div>
     <div class="card">
         <div class="section-heading">ℹ️ App Info</div>
-        <p style="color:#9ca3af;">ResumeAI Analyzer • v2.4.0<br>Model: gemini-3.5-flash</p>
+        <p style="color:#9ca3af;">ResumeAI Analyzer • v2.4.0<br>Model: gemini-2.5-flash</p>
     </div>
     """, unsafe_allow_html=True)
 
