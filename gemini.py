@@ -24,3 +24,29 @@ if not api_key:
     )
 
 client = genai.Client(api_key=api_key)
+
+
+def generate_with_retry(prompt, max_retries=3):
+    """Calls Gemini with automatic retry + model fallback on overload (503) errors."""
+    import time
+    from google.genai.errors import ServerError
+
+    model_candidates = ["gemini-3.5-flash", "gemini-flash-lite-latest"]
+    last_error = None
+
+    for model_name in model_candidates:
+        for attempt in range(max_retries):
+            try:
+                response = client.models.generate_content(
+                    model=model_name,
+                    contents=prompt
+                )
+                return response.text
+            except ServerError as e:
+                last_error = e
+                if attempt < max_retries - 1:
+                    time.sleep(3 * (attempt + 1))
+                    continue
+                break
+
+    raise last_error

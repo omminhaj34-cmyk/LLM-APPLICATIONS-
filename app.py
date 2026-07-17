@@ -5,7 +5,7 @@ import datetime
 import os
 from parser import read_resume
 from ats import analyze_resume
-from gemini import client
+from gemini import generate_with_retry
 
 st.set_page_config(page_title="ResumeAI", page_icon="✨", layout="wide", initial_sidebar_state="expanded")
 
@@ -434,14 +434,19 @@ Return ONLY JSON in this format:
 }}
 No extra text, no markdown fences.
 """
-                response = client.models.generate_content(model="gemini-3.5-flash", contents=prompt)
                 try:
-                    cleaned = response.text.strip().replace("```json", "").replace("```", "")
+                    result_text = generate_with_retry(prompt)
+                    cleaned = result_text.strip().replace("```json", "").replace("```", "")
                     sections_data = json.loads(cleaned)
                     st.session_state.deep_dive = sections_data
                 except json.JSONDecodeError:
                     st.error("Couldn't parse response.")
-                    st.code(response.text)
+                    st.code(result_text)
+                except Exception:
+                    st.error(
+                        "⚠️ Google's AI servers are experiencing high demand right now. "
+                        "Please wait a moment and try again."
+                    )
 
         if "deep_dive" in st.session_state:
             for sec in st.session_state.deep_dive["sections"]:
@@ -481,13 +486,18 @@ Return ONLY JSON in this format:
 }}
 No extra text, no markdown fences.
 """
-                response = client.models.generate_content(model="gemini-3.5-flash", contents=prompt)
                 try:
-                    cleaned = response.text.strip().replace("```json", "").replace("```", "")
+                    result_text = generate_with_retry(prompt)
+                    cleaned = result_text.strip().replace("```json", "").replace("```", "")
                     st.session_state.optimization = json.loads(cleaned)
                 except json.JSONDecodeError:
                     st.error("Couldn't parse response.")
-                    st.code(response.text)
+                    st.code(result_text)
+                except Exception:
+                    st.error(
+                        "⚠️ Google's AI servers are experiencing high demand right now. "
+                        "Please wait a moment and try again."
+                    )
 
         if "optimization" in st.session_state:
             for item in st.session_state.optimization["rewrites"]:
@@ -529,13 +539,18 @@ Return ONLY JSON in this format:
 }}
 No extra text, no markdown fences.
 """
-                response = client.models.generate_content(model="gemini-3.5-flash", contents=prompt)
                 try:
-                    cleaned = response.text.strip().replace("```json", "").replace("```", "")
+                    result_text = generate_with_retry(prompt)
+                    cleaned = result_text.strip().replace("```json", "").replace("```", "")
                     st.session_state.job_match = json.loads(cleaned)
                 except json.JSONDecodeError:
                     st.error("Couldn't parse response.")
-                    st.code(response.text)
+                    st.code(result_text)
+                except Exception:
+                    st.error(
+                        "⚠️ Google's AI servers are experiencing high demand right now. "
+                        "Please wait a moment and try again."
+                    )
 
         if "job_match" in st.session_state:
             jm = st.session_state.job_match
