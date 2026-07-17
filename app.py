@@ -370,7 +370,15 @@ if page == "📊 Overview":
             resume_text = read_resume(tmp_path)
 
         with st.spinner("🤖 Analyzing with Gemini AI..."):
-            result = analyze_resume(resume_text)
+            try:
+                result = analyze_resume(resume_text)
+            except Exception:
+                st.error(
+                    "⚠️ Google's AI servers are experiencing high demand right now. "
+                    "This is temporary on Google's end — please wait a moment and try "
+                    "uploading again."
+                )
+                st.stop()
 
         try:
             cleaned = result.strip().replace("```json", "").replace("```", "")
